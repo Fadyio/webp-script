@@ -1,10 +1,10 @@
 #!/bin/bash
 
-for file in *.{jpg,jpeg,png}; do
-  cwebp -q 80 "$file" -o "${file%.*}.webp"
-done
+# Convert image files in the current directory and its subdirectories to WebP
+find . -type f \( -name "*.jpg" -o -name "*.jpeg" -o -name "*.png" \) -exec sh -c 'cwebp -q 80 "$0" -o "${0%.*}.webp"' {} \;
 
-# delete the fils with jpg,jpeg,png after convert
-find . -type f \( -name "*.jpg" -o -name "*.jpeg" -o -name "*.png" \) -delete
+# Delete the original image files
+find . -type f \( -name "*.jpg" -o -name "*.jpeg" -o -name "*.png" \) -exec rm {} \;
 
+# Replace references in Markdown files to use the newly converted WebP images
 find . -type f -name "*.md" -exec sed -i 's/\.png/\.webp/g' {} +
